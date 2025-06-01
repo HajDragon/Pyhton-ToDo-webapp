@@ -26,20 +26,19 @@ def main():
 
     task_input = st.text_input("Add a new task:")
     if st.button("Add"):
-        if task_input.strip():  # Fixed: use strip() instead of != ""
+        if task_input.strip():
             task_list.append(task_input.strip())
             save_tasks(task_list)
-            st.rerun()  # Fixed: refresh page to clear input
+            st.rerun()
 
-    # Fixed: Move selectbox inside proper condition
-    if task_list:  # Only show if tasks exist
+    if task_list:
         selected_task = st.selectbox("Select a task to remove:", options=task_list)
         if st.button("Delete"):
             delete(task_list, selected_task)
-            st.rerun()  # Fixed: refresh after deletion
+            st.rerun()
 
     if st.button("Clear all tasks"):
-        if task_list:  # Only clear if tasks exist
+        if task_list:
             task_list.clear()
             save_tasks(task_list)
             st.rerun()
@@ -49,19 +48,19 @@ def main():
 
 def load_tasks():
     try:
-        with open(CSV_FILE, "r") as f:  # Fixed: added space
+        with open(CSV_FILE, "r") as f:
             reader = csv.reader(f)
-            return [row[0] for row in reader if row]  # Fixed: check if row exists
+            return [row[0] for row in reader if row]
     except FileNotFoundError:
         return []
 
 
 def display_tasks(task_list):
-    if not task_list:  # More pythonic
-        st.info("No tasks added yet.")  # Fixed: typo "tasts" -> "tasks", use st.info
+    if not task_list:
+        st.info("No tasks added yet.")
     else:
-        st.success("Current tasks:")  # Better visual feedback
-        for i, task in enumerate(task_list, 1):  # Start from 1 directly
+        st.success("Current tasks:")
+        for i, task in enumerate(task_list, 1):
             st.write(f"{i}. {task}")
 
 
@@ -72,7 +71,7 @@ def save_tasks(task_list):
 
 
 def delete(task_list, selected_task):
-    if selected_task in task_list:  # Add safety check
+    if selected_task in task_list:
         task_list.remove(selected_task)
         save_tasks(task_list)
         st.success(f"Task '{selected_task}' deleted successfully!")
